@@ -16,15 +16,15 @@
  */
 package org.jboss.as.quickstarts.kitchensink.data;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
 
-import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.jboss.as.quickstarts.kitchensink.model.MemberRegisterModel;
 
 @ApplicationScoped
 public class MemberRepository {
@@ -32,25 +32,36 @@ public class MemberRepository {
     @Inject
     private EntityManager em;
 
-    public Member findById(Long id) {
-        return em.find(Member.class, id);
+    public MemberRegisterModel findById(Long id) {
+        return em.find(MemberRegisterModel.class, id);
     }
 
-    public Member findByEmail(String email) {
+    public MemberRegisterModel findByEmail(String email) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Member> criteria = cb.createQuery(Member.class);
-        Root<Member> member = criteria.from(Member.class);
+        CriteriaQuery<MemberRegisterModel> criteria = cb.createQuery(MemberRegisterModel.class);
+        Root<MemberRegisterModel> member = criteria.from(MemberRegisterModel.class);
         // Swap criteria statements if you would like to try out type-safe criteria queries, a new
         // feature in JPA 2.0
         // criteria.select(member).where(cb.equal(member.get(Member_.email), email));
         criteria.select(member).where(cb.equal(member.get("email"), email));
         return em.createQuery(criteria).getSingleResult();
     }
-
-    public List<Member> findAllOrderedByName() {
+    
+    public MemberRegisterModel findByUsername(String username) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Member> criteria = cb.createQuery(Member.class);
-        Root<Member> member = criteria.from(Member.class);
+        CriteriaQuery<MemberRegisterModel> criteria = cb.createQuery(MemberRegisterModel.class);
+        Root<MemberRegisterModel> member = criteria.from(MemberRegisterModel.class);
+        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
+        // feature in JPA 2.0
+        // criteria.select(member).where(cb.equal(member.get(Member_.email), email));
+        criteria.select(member).where(cb.equal(member.get("username"), username));
+        return em.createQuery(criteria).getSingleResult();
+    }
+
+    public List<MemberRegisterModel> findAllOrderedByName() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<MemberRegisterModel> criteria = cb.createQuery(MemberRegisterModel.class);
+        Root<MemberRegisterModel> member = criteria.from(MemberRegisterModel.class);
         // Swap criteria statements if you would like to try out type-safe criteria queries, a new
         // feature in JPA 2.0
         // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));

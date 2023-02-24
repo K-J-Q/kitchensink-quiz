@@ -18,27 +18,30 @@ package org.jboss.as.quickstarts.kitchensink.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 
 @SuppressWarnings("serial")
 @Entity
 @XmlRootElement
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class Member implements Serializable {
+@Table(uniqueConstraints = {
+	    @UniqueConstraint(columnNames = "email"),
+	    @UniqueConstraint(columnNames = "username")
+	})
 
+public class MemberRegisterModel implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
@@ -54,11 +57,21 @@ public class Member implements Serializable {
     private String email;
 
     @NotNull
-    @Size(min = 10, max = 12)
+    @Size(min = 8, max = 12)
     @Digits(fraction = 0, integer = 12)
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @NotNull
+    @NotEmpty
+    private String username;
+    
+    @NotNull
+    @Size(min=8)
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[!@#$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?]).+$", message = "Must have at least 1 number, and one special character.")
+    private String password;
+    
+    
     public Long getId() {
         return id;
     }
@@ -90,4 +103,21 @@ public class Member implements Serializable {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+    
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+   
 }

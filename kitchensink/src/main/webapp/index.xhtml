@@ -16,10 +16,10 @@
     limitations under the License.
 -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    template="/WEB-INF/templates/default.xhtml">
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                template="/WEB-INF/templates/default.xhtml">
     <ui:define name="content">
         <h1>Welcome to JBoss!</h1>
 
@@ -27,8 +27,24 @@
             <p>You have successfully deployed a Jakarta EE Enterprise
                 Application.</p>
         </div>
-
-        <h:form id="reg">
+		<h:form id="login">
+			<h2>Member Login</h2>
+			<h:panelGrid columns="2" columnClasses="titleCell">
+			    <h:outputLabel for="login_username" value="Username:" />
+			    <h:inputText id="login_username"  value="#{existingMember.username}"/>
+			
+			    <h:outputLabel for="login_password" value="Password:" />
+			    <h:inputText id="login_password"  value="#{existingMember.password}" type="password" />
+			</h:panelGrid>
+			<p>
+			    <h:panelGrid columns="2">
+			        <h:commandButton id="login" value="Login" action="#{memberLoginController.login}" styleClass="register" />
+			        <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning" globalOnly="true" />
+			    </h:panelGrid>
+			</p>
+		</h:form>
+		
+        <h:form id="reg">            
             <h2>Member Registration</h2>
             <p>Enforces annotation-based constraints defined on the
                 model class.</p>
@@ -43,18 +59,29 @@
 
                 <h:outputLabel for="phoneNumber" value="Phone #:" />
                 <h:inputText id="phoneNumber"
-                    value="#{newMember.phoneNumber}" />
+                             value="#{newMember.phoneNumber}" />
                 <h:message for="phoneNumber" errorClass="invalid" />
+                
+                <h:outputLabel for="username" value="Username:" />
+                <h:inputText id="username"
+                             value="#{newMember.username}" />
+                <h:message for="username" errorClass="invalid" />
+                
+                <h:outputLabel for="password" value="Password:" />
+                <h:inputText id="password"
+                             value="#{newMember.password}"  type="password" />
+                <h:message for="password" errorClass="invalid" />
             </h:panelGrid>
 
             <p>
+               
                 <h:panelGrid columns="2">
                     <h:commandButton id="register"
-                        action="#{memberController.register}"
-                        value="Register" styleClass="register" />
+                                     action="#{memberRegisterController.register}"
+                                     value="Register" styleClass="register" />
                     <h:messages styleClass="messages"
-                        errorClass="invalid" infoClass="valid"
-                        warnClass="warning" globalOnly="true" />
+                                errorClass="invalid" infoClass="valid"
+                                warnClass="warning" globalOnly="true" />
                 </h:panelGrid>
             </p>
         </h:form>
@@ -63,23 +90,31 @@
             <em>No registered members.</em>
         </h:panelGroup>
         <h:dataTable var="_member" value="#{members}"
-            rendered="#{not empty members}"
-            styleClass="simpletablestyle">
+                     rendered="#{not empty members}"
+                     styleClass="simpletablestyle">
             <h:column>
                 <f:facet name="header">Id</f:facet>
-                #{_member.id}
+                    #{_member.id}
             </h:column>
             <h:column>
                 <f:facet name="header">Name</f:facet>
-                #{_member.name}
+                    #{_member.name}
             </h:column>
             <h:column>
                 <f:facet name="header">Email</f:facet>
-                #{_member.email}
+                    #{_member.email}
             </h:column>
             <h:column>
                 <f:facet name="header">Phone #</f:facet>
-                #{_member.phoneNumber}
+                    #{_member.phoneNumber}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Username</f:facet>
+                    #{_member.username}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                    #{_member.password}
             </h:column>
             <h:column>
                 <f:facet name="header">REST URL</f:facet>
@@ -87,7 +122,7 @@
                     href="#{request.contextPath}/rest/members/#{_member.id}">/rest/members/#{_member.id}</a>
             </h:column>
             <f:facet name="footer">
-            REST URL for all members: <a
+                REST URL for all members: <a
                     href="#{request.contextPath}/rest/members">/rest/members</a>
             </f:facet>
         </h:dataTable>

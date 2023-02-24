@@ -23,25 +23,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.NoResultException;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
-import javax.validation.Validator;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
+import jakarta.validation.Validator;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
-import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.jboss.as.quickstarts.kitchensink.model.MemberRegisterModel;
 import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
 
 /**
@@ -67,15 +67,15 @@ public class MemberResourceRESTService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Member> listAllMembers() {
+    public List<MemberRegisterModel> listAllMembers() {
         return repository.findAllOrderedByName();
     }
 
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Member lookupMemberById(@PathParam("id") long id) {
-        Member member = repository.findById(id);
+    public MemberRegisterModel lookupMemberById(@PathParam("id") long id) {
+    	MemberRegisterModel member = repository.findById(id);
         if (member == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -89,7 +89,7 @@ public class MemberResourceRESTService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createMember(Member member) {
+    public Response createMember(MemberRegisterModel member) {
 
         Response.ResponseBuilder builder = null;
 
@@ -133,9 +133,9 @@ public class MemberResourceRESTService {
      * @throws ConstraintViolationException If Bean Validation errors exist
      * @throws ValidationException If member with the same email already exists
      */
-    private void validateMember(Member member) throws ConstraintViolationException, ValidationException {
+    private void validateMember(MemberRegisterModel member) throws ConstraintViolationException, ValidationException {
         // Create a bean validator and check for issues.
-        Set<ConstraintViolation<Member>> violations = validator.validate(member);
+        Set<ConstraintViolation<MemberRegisterModel>> violations = validator.validate(member);
 
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(new HashSet<>(violations));
@@ -174,7 +174,7 @@ public class MemberResourceRESTService {
      * @return True if the email already exists, and false otherwise
      */
     public boolean emailAlreadyExists(String email) {
-        Member member = null;
+    	MemberRegisterModel member = null;
         try {
             member = repository.findByEmail(email);
         } catch (NoResultException e) {
