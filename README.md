@@ -77,7 +77,7 @@ and the restriction added into the model/Member.java
 	    @UniqueConstraint(columnNames = "email"),
 	    @UniqueConstraint(columnNames = "username")
 })
-``
+```
 
 The import.sql file was modified to include the new fields.
 ```
@@ -87,3 +87,72 @@ insert into Member (id, name, email, phone_number, username, password) values (0
 # 4.3 Exercise 3: Secure the Webservice
 In project kitchensink, implement a security check that only valid registered username
 and password can successfully access the webservice to read the JSON response.
+
+The original model/Member.java was renamed to model/MemberRegisterationModel.java
+A new model was created called MemberLoginModel.java. This contains the username and password only
+```
+@SuppressWarnings("serial")
+@Entity
+@XmlRootElement
+public class MemberLoginModel implements Serializable {
+	@Id
+    @GeneratedValue
+    private Long id;
+
+    @NotNull
+    @NotEmpty
+    private String username;
+
+    @NotNull
+    @NotEmpty
+    private String password;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+```
+
+The original model/Member.java was renamed to model/MemberRegisterationModel.java
+A new model was created called MemberLoginModel.java. This contains the username and password only
+
+
+A login field was added into the index.xhtml file.
+```
+<h:form id="login">
+<h2>Member Login</h2>
+	<h:panelGrid columns="2" columnClasses="titleCell">
+	    <h:outputLabel for="login_username" value="Username:" />
+	    <h:inputText id="login_username"  value="#{existingMember.username}"/>
+
+	    <h:outputLabel for="login_password" value="Password:" />
+	    <h:inputText id="login_password"  value="#{existingMember.password}" type="password" />
+	</h:panelGrid>
+	<p>
+	    <h:panelGrid columns="2">
+	        <h:commandButton id="login" value="Login" action="#{memberLoginController.login}" styleClass="register" />
+	        <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning" globalOnly="true" />
+	    </h:panelGrid>
+	</p>
+</h:form>
+```
