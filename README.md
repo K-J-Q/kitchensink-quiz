@@ -1,4 +1,18 @@
-# 4.1 Exercise 1: Change Check Condition
+# Overview
+## Main page
+![image](https://user-images.githubusercontent.com/71882072/221225603-cd98e3bd-7fb9-442a-9b91-75c83ff36564.png)
+
+## Registeration
+![image](https://user-images.githubusercontent.com/71882072/221225934-dce90124-1aad-440a-8e0e-610aad3398f2.png)
+
+## Login (wrong password)
+![image](https://user-images.githubusercontent.com/71882072/221226082-10dc6ab2-e655-4360-b8b9-aad13735f21b.png)
+
+## Login (correct password)
+![image](https://user-images.githubusercontent.com/71882072/221226279-f8934396-b324-4265-93f7-d5aad93804b7.png)
+
+
+# Exercise 1: Change Check Condition
 In the project kitchensink, the minimum phone number check was modified to allow 8 digits. 
 
 This was done by changing the `@Size` parameter in the `model/Member.java` file.
@@ -8,7 +22,7 @@ This was done by changing the `@Size` parameter in the `model/Member.java` file.
 @Size(min = 8, max = 12)
 ```
 
-# 4.2 Exercise 2: Add Username and Password Fields
+# Exercise 2: Add Username and Password Fields
 In project kitchensink, add username and password fields with appropriate check.
 
 1. Firstly, new fields properties were written in the file `model/Member.java` with the following checks:
@@ -82,7 +96,7 @@ public MemberRegisterModel findByUsername(String username) {
 insert into Member (id, name, email, phone_number, username, password) values (0, 'John Smith', 'john.smith@mailinator.com', '2125551212', 'jsmith', '01234567.') 
 ```
 
-# 4.3 Exercise 3: Secure the Webservice
+# Exercise 3: Secure the Webservice
 In project kitchensink, implement a security check that only valid registered username
 and password can successfully access the webservice to read the JSON response.
 
