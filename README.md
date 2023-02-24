@@ -89,7 +89,7 @@ In project kitchensink, implement a security check that only valid registered us
 and password can successfully access the webservice to read the JSON response.
 
 The original model/Member.java was renamed to model/MemberRegisterationModel.java
-A new model was created called MemberLoginModel.java. This contains the username and password only
+A new model called MemberLoginModel.java was created. This contains the username and password only
 ```
 @SuppressWarnings("serial")
 @Entity
@@ -133,11 +133,99 @@ public class MemberLoginModel implements Serializable {
 }
 ```
 
-The original model/Member.java was renamed to model/MemberRegisterationModel.java
-A new model was created called MemberLoginModel.java. This contains the username and password only
+A new controller called controller/MemberLoginController.java was created. This will process the login information, similar to how controller/MemberRegisterController.java processes the registeration information. 
 
+If the login was successful, the page will redirect the user to the JSON response.
+```
+@Model
+public class MemberLoginController {
+    @Inject
+    private FacesContext facesContext;
 
-A login field was added into the index.xhtml file.
+    @Inject
+    private MemberLogin memberLogin;
+
+    @Produces
+    @Named
+    private MemberLoginModel existingMember;
+
+    @PostConstruct
+    public void initExistingMember() {
+    	existingMember = new MemberLoginModel();
+    }
+
+	public void login() throws Exception {
+		FacesMessage m;
+        try {
+        	if (memberLogin.login(existingMember) == true){
+        		m = new FacesMessage(FacesMessage.SEVERITY_INFO, "Logged in!", "Login successful");
+        	    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        	    externalContext.redirect(externalContext.getRequestContextPath() + "/rest/members");
+        	}
+        	else {
+        		m = new FacesMessage(FacesMessage.SEVERITY_INFO, "Incorrect username/password", "Login unsuccessful");
+        	}
+
+			facesContext.addMessage(null, m);
+            initExistingMember();
+        } catch (Exception e) {
+            String errorMessage = getRootErrorMessage(e);
+            m = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to login!", "Login unsuccessful");
+            facesContext.addMessage(null, m);
+        }
+    }
+
+	private String getRootErrorMessage(Exception e) {
+        // Default to general error message that registration failed.
+        String errorMessage = "Registration failed. See server log for more information";
+        if (e == null) {
+            // This shouldn't happen, but return the default messages
+            return errorMessage;
+        }
+
+        // Start with the exception and recurse to find the root cause
+        Throwable t = e;
+        while (t != null) {
+            // Get the message from the Throwable class instance
+            errorMessage = t.getLocalizedMessage();
+            t = t.getCause();
+        }
+        // This is the root cause message
+        return errorMessage;
+    }
+}
+```
+
+A new service called MemberLogin.java was created.
+```
+@Stateless
+public class MemberLogin {
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    private EntityManager em;
+
+    @Inject
+    private MemberRepository repository;
+
+    public boolean login(MemberLoginModel loginInfo) {
+    	String username = loginInfo.getUsername();
+    	String password = loginInfo.getPassword();
+        log.info("Logging in " + username);
+        MemberRegisterModel member = repository.findByUsername(username);
+        if (member != null && member.getPassword().equals(password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+```
+
+Finally, a login field was added into the index.xhtml file.
 ```
 <h:form id="login">
 <h2>Member Login</h2>
