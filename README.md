@@ -1,7 +1,7 @@
 # 4.1 Exercise 1: Change Check Condition
-In project kitchensink, change the phone number check from min 10 digits to 8 digits.
+In the project kitchensink, the minimum phone number check was modified to allow 8 digits. 
 
-This was achieved using the *@size* parameter in the file model/Member.java
+This was done by changing the `@Size` parameter in the `model/Member.java` file.
 
 ```
 @Size(min = 10, max = 12)
@@ -11,10 +11,10 @@ This was achieved using the *@size* parameter in the file model/Member.java
 # 4.2 Exercise 2: Add Username and Password Fields
 In project kitchensink, add username and password fields with appropriate check.
 
-Firstly, new fields properties were written in the file model/Member.java with the following checks:
-- *username* - must not be empty or null
-- *username* - should not exist in the database
-- *password* - at least 8 characters, with at least one number and one special character.
+1. Firstly, new fields properties were written in the file `model/Member.java` with the following checks:
+- `username` - must not be empty or null
+- `username` - should not exist in the database
+- `password` - at least 8 characters, with at least one number and one special character.
 
 ```
 @NotNull
@@ -43,7 +43,7 @@ public void setPassword(String password) {
 }
 ```
 
-The file index.xhtml was also modified to include the username and password fields.
+2. The `index.xhtml` file was also modified to include the `username` and `password` fields.
 ```
 <h:outputLabel for="username" value="Username:" />
 <h:inputText id="username"
@@ -56,9 +56,7 @@ The file index.xhtml was also modified to include the username and password fiel
 <h:message for="password" errorClass="invalid" />
 ```
 
-The username registered should be unique and not exist in the database.
-
-To do so, firstly this funcition was added in data/MemberRepository.java
+3. A funcition was added in data/MemberRepository.java as the username registered should be unique and not exist in the database.
 ```
 public MemberRegisterModel findByUsername(String username) {
     CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -71,7 +69,7 @@ public MemberRegisterModel findByUsername(String username) {
     return em.createQuery(criteria).getSingleResult();
 }
 ```
-and the restriction added into the model/Member.java
+4. The username restriction was added into the `model/Member.java`
 ```
 @Table(uniqueConstraints = {
 	    @UniqueConstraint(columnNames = "email"),
@@ -79,7 +77,7 @@ and the restriction added into the model/Member.java
 })
 ```
 
-The import.sql file was modified to include the new fields.
+5. The `import.sql` file was modified to include the new fields.
 ```
 insert into Member (id, name, email, phone_number, username, password) values (0, 'John Smith', 'john.smith@mailinator.com', '2125551212', 'jsmith', '01234567.') 
 ```
@@ -88,8 +86,8 @@ insert into Member (id, name, email, phone_number, username, password) values (0
 In project kitchensink, implement a security check that only valid registered username
 and password can successfully access the webservice to read the JSON response.
 
-The original model/Member.java was renamed to model/MemberRegisterationModel.java
-A new model called MemberLoginModel.java was created. This contains the username and password only
+1. The original `model/Member.java` was renamed to `model/MemberRegisterationModel.java`
+2. A new model called `MemberLoginModel.java` was created. This contains the `username` and `password` only
 ```
 @SuppressWarnings("serial")
 @Entity
@@ -133,7 +131,7 @@ public class MemberLoginModel implements Serializable {
 }
 ```
 
-A new controller called controller/MemberLoginController.java was created. This will process the login information, similar to how controller/MemberRegisterController.java processes the registeration information. 
+3. A new controller called `controller/MemberLoginController.java` was created. This will process the login information, similar to how `controller/MemberRegisterController.java` processes the registeration information. 
 
 If the login was successful, the page will redirect the user to the JSON response.
 ```
@@ -196,7 +194,7 @@ public class MemberLoginController {
 }
 ```
 
-A new service called MemberLogin.java was created.
+4. A new service called `MemberLogin.java` was created.
 ```
 @Stateless
 public class MemberLogin {
@@ -225,7 +223,7 @@ public class MemberLogin {
 }
 ```
 
-Finally, a login field was added into the index.xhtml file.
+5. A login field was added into the `index.xhtml` file.
 ```
 <h:form id="login">
 <h2>Member Login</h2>
