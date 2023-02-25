@@ -16,9 +16,12 @@
 In the project kitchensink, the minimum phone number check was modified to allow 8 digits. 
 
 This was done by changing the `@Size` parameter in the `model/Member.java` file.
-
+From
 ```
 @Size(min = 10, max = 12)
+```
+To
+```
 @Size(min = 8, max = 12)
 ```
 
