@@ -145,9 +145,7 @@ public class MemberLoginModel implements Serializable {
 }
 ```
 
-3. A new controller called `controller/MemberLoginController.java` was created. This will process the login information, similar to how `controller/MemberRegisterController.java` processes the registeration information. 
-
-If the login was successful, the page will redirect the user to the JSON response.
+3. A new controller called `controller/MemberLoginController.java` was created. This will process the login information, similar to how `controller/MemberRegisterController.java` processes the registeration information. If the login was successful, the page will redirect the user to the JSON response.
 ```
 @Model
 public class MemberLoginController {
